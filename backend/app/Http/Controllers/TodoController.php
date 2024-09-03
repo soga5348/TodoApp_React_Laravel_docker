@@ -8,9 +8,21 @@ use Illuminate\Http\Request;
 class TodoController extends Controller
 {
     public function index()
-    {
-        return response()->json(Todo::all(), 200, [], JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
-    }
+{
+    $todos = Todo::all()->map(function ($todo) {
+        return [
+            '番号' => $todo->id,
+            '名前' => $todo->title,
+            '完了' => $todo->completed ? '済' : 'していない',
+            '作成日時' => $todo->created_at,
+            '更新日時' => $todo->updated_at,
+        ];
+    });
+
+    return response()->json($todos, 200, [], JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
+}
+
+
     
 
 

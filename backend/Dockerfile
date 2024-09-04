@@ -26,3 +26,9 @@ RUN chmod -R 755 /var/www/html
 # Laravelサーバーを起動
 CMD php artisan serve --host=0.0.0.0 --port=8000
 
+RUN apt-get update && apt-get install -y tzdata \
+    && ln -sf /usr/share/zoneinfo/Asia/Tokyo /etc/localtime \
+    && echo "Asia/Tokyo" > /etc/timezone
+
+
+

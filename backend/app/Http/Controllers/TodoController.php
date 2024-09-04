@@ -26,14 +26,20 @@ class TodoController extends Controller
     
 
 
-    public function store(Request $request)
-    {
-        $todo = new Todo();
-        $todo->title = $request->title;
-        $todo->save();
+public function store(Request $request)
+{
+    // バリデーションを追加
+    $request->validate([
+        '名前' => 'required|string|max:255',
+    ]);
 
-        return response()->json($todo, 201);
-    }
+    $todo = new Todo();
+    $todo->title = $request->input('名前');  // 'title' ではなく '名前' を受け取る
+    $todo->save();
+
+    return response()->json($todo, 201, [], JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
+}
+
 
     public function update(Request $request, Todo $todo)
     {

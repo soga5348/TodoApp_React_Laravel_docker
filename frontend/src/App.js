@@ -8,30 +8,30 @@ function App() {
   useEffect(() => {
     axios.get('http://localhost:8000/api/todos')
       .then(response => {
-        setTodos(response.data);
+        setTodos(response.data);  // データをセット
+      })
+      .catch(error => {
+        console.error("Error fetching todos:", error);
       });
-  }, []);
+  }, [todos]);  // `todos`が更新されるたびに再フェッチ
 
-  const addTodo = () => {
-    axios.post('http://localhost:8000/api/todos', { title: newTodo })
-      .then(response => {
-        setTodos([...todos, response.data]);
-        setNewTodo('');
-      });
+  const addTodo = async () => {
+    try {
+      const response = await axios.post('http://localhost:8000/api/todos', { 名前: newTodo });
+      setTodos([...todos, response.data]);  // 新しいデータを追加
+      setNewTodo('');  // 入力フィールドをクリア
+    } catch (error) {
+      console.error("Error adding todo:", error);
+    }
   };
 
-  const toggleComplete = (id, completed) => {
-    axios.put(`http://localhost:8000/api/todos/${id}`, { completed })
-      .then(response => {
-        setTodos(todos.map(todo => todo.id === id ? response.data : todo));
-      });
-  };
-
-  const deleteTodo = (id) => {
-    axios.delete(`http://localhost:8000/api/todos/${id}`)
-      .then(() => {
-        setTodos(todos.filter(todo => todo.id !== id));
-      });
+  const deleteTodo = async (id) => {
+    try {
+      await axios.delete(`http://localhost:8000/api/todos/${id}`);
+      setTodos(todos.filter(todo => todo.番号 !== id));  // 削除されたデータを除外
+    } catch (error) {
+      console.error("Error deleting todo:", error);
+    }
   };
 
   return (
@@ -46,14 +46,9 @@ function App() {
       <button onClick={addTodo}>Add</button>
       <ul>
         {todos.map(todo => (
-          <li key={todo.id}>
-            <input
-              type="checkbox"
-              checked={todo.completed}
-              onChange={() => toggleComplete(todo.id, !todo.completed)}
-            />
-            {todo.title}
-            <button onClick={() => deleteTodo(todo.id)}>Delete</button>
+          <li key={todo.番号}>
+            {todo.名前}
+            <button onClick={() => deleteTodo(todo.番号)}>Delete</button>
           </li>
         ))}
       </ul>
@@ -62,4 +57,3 @@ function App() {
 }
 
 export default App;
-

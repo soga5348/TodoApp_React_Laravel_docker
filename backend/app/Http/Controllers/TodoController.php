@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Todo;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 
 class TodoController extends Controller
 {
@@ -14,8 +15,8 @@ class TodoController extends Controller
             '番号' => $todo->id,
             '名前' => $todo->title,
             '完了' => $todo->completed ? '済' : 'していない',
-            '作成日時' => $todo->created_at,
-            '更新日時' => $todo->updated_at,
+            '作成日時' => Carbon::parse($todo->created_at)->timezone('Asia/Tokyo')->toDateTimeString(),
+            '更新日時' => Carbon::parse($todo->updated_at)->timezone('Asia/Tokyo')->toDateTimeString(),
         ];
     });
 
